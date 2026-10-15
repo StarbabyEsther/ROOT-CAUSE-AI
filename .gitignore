@@ -216,5 +216,7 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
+bug_report.txt
+
 # Streamlit
 .streamlit/secrets.toml
