@@ -75,6 +75,14 @@ def investigate_bug():
 if __name__ == "__main__":
     print("ROOTCAUSE AI - NVIDIA NEMOTRON INVESTIGATION")
     print("=" * 45)
-
+   
     result = investigate_bug()
     print(result)
+
+    # Save Nemotron's investigation to a text file
+    with open("ai_investigation.txt", "w", encoding="utf-8") as file:
+        file.write(result)
+
+    print("AI investigation saved successfully!")
+
+  

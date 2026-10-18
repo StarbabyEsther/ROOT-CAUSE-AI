@@ -220,3 +220,8 @@ bug_report.txt
 
 # Streamlit
 .streamlit/secrets.toml
+
+# RootCause AI generated reports
+ai_investigation.txt
+financial_report.json
+verification_report.json
