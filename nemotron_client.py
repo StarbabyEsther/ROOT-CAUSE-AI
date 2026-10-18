@@ -45,14 +45,18 @@ def investigate_bug():
         messages=[
             {
                 "role": "system",
+                
                 "content": (
-                    "You are RootCause AI, a financial software "
-                    "debugging assistant. Analyze financial "
-                    "discrepancies and Python code. "
-                    "Identify possible root causes and suggest "
-                    "minimal code repairs. Do not claim any "
-                    "repair is verified without test evidence."
-                )
+                    "You are RootCause AI, a financial software debugging assistant. "
+                    "Analyze financial discrepancies and Python code. "
+                    "Identify the root cause and recommend a minimal repair. "
+                    "Return ONLY a valid JSON object with these fields: "
+                    "issue_type, affected_function, root_cause, suggested_fix. "
+                    "All four values must be strings. "
+                    "Do not include Markdown formatting or code fences. "
+                    "Do not claim a repair is verified without test evidence."
+                            )
+
             },
             {
                 "role": "user",

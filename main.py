@@ -40,6 +40,32 @@ ai_result = investigate_bug()
 print("\nAI INVESTIGATION RESULTS:")
 print(ai_result)
 
+
+# Convert Nemotron's JSON response into a Python dictionary
+ai_report = json.loads(ai_result)
+
+print("\nSTRUCTURED AI RESULTS:")
+print("Issue type:", ai_report["issue_type"])
+print("Affected function:", ai_report["affected_function"])
+print("Root cause:", ai_report["root_cause"])
+print("Suggested fix:", ai_report["suggested_fix"])
+
+
+# Check that Nemotron provided all required information
+required_fields = [
+    "issue_type",
+    "affected_function",
+    "root_cause",
+    "suggested_fix"
+]
+
+if all(field in ai_report for field in required_fields):
+    print("AI repair proposal validated successfully!")
+else:
+    print("AI repair proposal is missing information!")
+
+
+
 # Step 3: Verify the controlled repair
 print("\nStarting repair verification...")
 
