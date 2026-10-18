@@ -220,3 +220,5 @@ bug_report.txt
 
 # Streamlit
 .streamlit/secrets.toml
+# financial_report
+financial_report.json
