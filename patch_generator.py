@@ -21,7 +21,7 @@ client = OpenAI(
 )
 
 
-def generate_patch():
+def generate_patch(feedback=None):
     report = json.loads(
         Path("financial_report.json").read_text(encoding="utf-8")
     )
@@ -36,44 +36,52 @@ def generate_patch():
             {
                 "role": "system",
                 "content": (
-                    "You are an expert Python code repair agent. "
-                    "Return only a valid JSON object with these keys: "
-                    "root_cause, explanation, target_file, "
-                    "proposed_code. "
+                    "You are RootCause AI, an expert Python software "
+                    "repair agent specializing in financial applications. "
+
+                    "Return exactly ONE valid JSON object containing "
+                    "these four keys: root_cause, explanation, "
+                    "target_file, proposed_code. "
+
                     "target_file must be transactions.py. "
-                    "proposed_code must contain the full corrected "
-                    "Python source code. "
-                    "Preserve public function names and signatures. "
-                    "Do not modify tests, fixtures, or expected values. "
-                    "Do not include Markdown formatting. "
-                    "Never claim the patch is verified."
+
+                    "IMPORTANT: proposed_code must contain ONLY "
+                    "the complete corrected calculate_total() function. "
+                    "Do NOT generate the entire Python file. "
+                    "Do NOT include the transactions list. "
+                    "Do NOT include imports, examples, or other functions. "
+
+                    "Preserve the function name calculate_total "
+                    "and its parameter transactions. "
+
+                    "Repair duplicate transaction handling using "
+                    "a set of previously processed transaction IDs. "
+                    "Process each unique transaction ID only once. "
+
+                    "Preserve the original payment and refund rules: "
+                    "Payment amounts must be added. "
+                    "Refund amounts must be subtracted. "
+
+                    "Do not change financial records or test expectations. "
+                    "Do not include Markdown code fences. "
+                    "Do not add explanations outside the JSON object. "
+                    "Never claim the generated patch is verified."
                 )
-            },
+            }
+,
             {
                 "role": "user",
                 "content": (
-                    "You are RootCause AI, an autonomous Python software "
-                    "repair engineer specializing in financial applications. "
-
-                    "Your goal is to repair the underlying SOURCE CODE LOGIC, "
-                    "not manipulate the input data to make tests pass. "
-
-                    "Return ONLY a valid JSON object with these keys: "
-                    "root_cause, explanation, target_file, proposed_code. "
-
-                    "target_file must be transactions.py. "
-                    "proposed_code must contain the FULL corrected Python file. "
-
-                    "STRICT RULES: "
-                    "1. Preserve the original transactions list exactly. "
-                    "2. Do not delete, reorder, or change transaction records. "
-                    "3. Do not modify tests, fixtures, or expected values. "
-                    "4. Fix duplicate handling inside calculate_total(). "
-                    "5. Preserve public function names and signatures. "
-                    "6. Do not include Markdown formatting. "
-                    "7. Never claim that a repair is verified without tests."
+                    "Repair this financial software bug.\n\n"
+                    "FINANCIAL REPORT:\n"
+                    + json.dumps(report, indent=2)
+                    + "\n\nORIGINAL SOURCE CODE:\n"
+                    + source_code
+                    + "\n\nPREVIOUS VALIDATION FEEDBACK:\n"
+                    + (feedback if feedback else "No previous attempt.")
                 )
             }
+
         ]
     )
 
@@ -99,8 +107,18 @@ def generate_patch():
         raise ValueError("Proposed code must be a string.")
 
     # Check syntax without executing the generated code
-    compile(patch["proposed_code"], "transactions.py", "exec")
+    import ast
 
+    tree = ast.parse(patch["proposed_code"])
+
+    if (
+        len(tree.body) != 1
+        or not isinstance(tree.body[0], ast.FunctionDef)
+        or tree.body[0].name != "calculate_total"
+    ):
+        raise ValueError(
+            "Patch must contain only calculate_total()."
+        )
     # Save the proposal; do NOT overwrite transactions.py
     Path("proposed_patch.json").write_text(
         json.dumps(patch, indent=2),

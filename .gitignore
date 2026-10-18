@@ -222,3 +222,5 @@ bug_report.txt
 .streamlit/secrets.toml
 # financial_report
 financial_report.json
+#proposed patch
+proposed_patch.json

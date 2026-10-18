@@ -16,7 +16,7 @@ def validate_patch():
     )
 
     if patch.get("target_file") != "transactions.py":
-        return False, "Patch targets an unauthorized file."
+        return False, "Unauthorized target file."
 
     proposed_code = patch.get("proposed_code")
 
@@ -27,86 +27,59 @@ def validate_patch():
         original_tree = ast.parse(original_code)
         proposed_tree = ast.parse(proposed_code)
     except SyntaxError as error:
-        return False, f"Invalid Python syntax: {error}"
+        return False, f"Python syntax error: {error}"
 
-    def get_transactions_definition(tree):
-        for node in tree.body:
-            if isinstance(node, ast.Assign):
-                if any(
-                    isinstance(target, ast.Name)
-                    and target.id == "transactions"
-                    for target in node.targets
-                ):
-                    return ast.dump(node.value)
+    # The AI may only propose one function.
+    if (
+        len(proposed_tree.body) != 1
+        or not isinstance(proposed_tree.body[0], ast.FunctionDef)
+        or proposed_tree.body[0].name != "calculate_total"
+    ):
+        return False, "Patch must contain only calculate_total()."
 
-        return None
+    proposed_function = proposed_tree.body[0]
 
-    original_data = get_transactions_definition(original_tree)
-    proposed_data = get_transactions_definition(proposed_tree)
-
-    if original_data is None or proposed_data != original_data:
-        return False, "Original transaction records were modified."
-
-    original_functions = {
-        node.name
-        for node in original_tree.body
-        if isinstance(node, ast.FunctionDef)
-    }
-
-    proposed_functions = {
-        node.name
-        for node in proposed_tree.body
-        if isinstance(node, ast.FunctionDef)
-    }
-
-    if not original_functions.issubset(proposed_functions):
-        return False, "An original function was removed."
-
-    original_calculate = next(
-        node for node in original_tree.body
-        if isinstance(node, ast.FunctionDef)
-        and node.name == "calculate_total"
-    )
-
-    proposed_calculate = next(
+    # Find the original calculate_total function.
+    original_function = next(
         (
-            node for node in proposed_tree.body
+            node for node in original_tree.body
             if isinstance(node, ast.FunctionDef)
             and node.name == "calculate_total"
         ),
         None
     )
 
-    if proposed_calculate is None:
-        return False, "calculate_total() was removed."
+    if original_function is None:
+        return False, "Original calculate_total() not found."
 
-    if ast.dump(original_calculate.args) != ast.dump(
-        proposed_calculate.args
+    # Preserve the original function signature.
+    if ast.dump(original_function.args) != ast.dump(
+        proposed_function.args
     ):
-        return False, "calculate_total() signature was changed."
+        return False, "Function signature was modified."
 
-    # Disallow unexpected top-level statements, including
-    # new imports and executable calls.
-    allowed_nodes = (
-        ast.FunctionDef,
-        ast.Assign,
-        ast.If,
-        ast.Expr
-    )
+    # Prevent code from being executed in default argument values
+    # or decorators during function definition.
+    if proposed_function.decorator_list:
+        return False, "Decorators are not allowed."
 
-    if any(
-        not isinstance(node, allowed_nodes)
-        for node in proposed_tree.body
+    if (
+        proposed_function.args.defaults
+        or any(
+            value is not None
+            for value in proposed_function.args.kw_defaults
+        )
     ):
-        return False, "Unexpected top-level code found."
+        return False, "Default parameter values are not allowed."
 
-    return True, "Structural checks passed; patch is NOT verified."
+    # No automatic application or execution occurs here.
+    return True, "Structural validation passed; NOT VERIFIED."
 
 
 if __name__ == "__main__":
-    valid, message = validate_patch()
+    valid, reason = validate_patch()
 
     print("ROOTCAUSE AI - PATCH VALIDATOR")
     print("=" * 40)
     print("Valid:", valid)
-    print("Reason:", message)
+    print("Reason:", reason)
