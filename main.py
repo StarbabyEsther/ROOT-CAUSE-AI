@@ -1,3 +1,4 @@
+from repair_verifier import verify_repair
 from nemotron_client import investigate_bug
 
 import json
@@ -39,4 +40,9 @@ ai_result = investigate_bug()
 print("\nAI INVESTIGATION RESULTS:")
 print(ai_result)
 
+# Step 3: Verify the controlled repair
+print("\nStarting repair verification...")
 
+verify_repair()
+
+print("\nRootCause AI workflow completed!")
