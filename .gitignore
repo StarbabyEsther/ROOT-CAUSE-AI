@@ -220,7 +220,15 @@ bug_report.txt
 
 # Streamlit
 .streamlit/secrets.toml
+<<<<<<< HEAD
 # financial_report
 financial_report.json
 #proposed patch
 proposed_patch.json
+=======
+
+# RootCause AI generated reports
+ai_investigation.txt
+financial_report.json
+verification_report.json
+>>>>>>> main
