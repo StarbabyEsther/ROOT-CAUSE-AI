@@ -232,3 +232,14 @@ ai_investigation.txt
 financial_report.json
 verification_report.json
 >>>>>>> main
+
+
+financial_report.json
+proposed_patch.json
+verification_report.json
+verification_bundle/
+sandbox_verification_report.json
+
+refund_verification_bundle/
+refund_verification_report.json
+refund_proposed_patch.json

@@ -21,11 +21,31 @@ def run_repair_agent():
             patch = generate_patch(feedback=feedback)
             valid, reason = validate_patch()
 
+            
             if valid:
                 print("Structural validation: PASSED")
-                print("Patch is ready for isolated verification.")
-                print("Status: NOT VERIFIED")
-                return
+                print("Starting Nebius Sandbox verification...")
+
+                from sandbox_verifier import verify_ai_repair
+
+                report = verify_ai_repair()
+
+                if report["verdict"] == "verified_fixed":
+                    print("\nROOTCAUSE AI REPAIR VERIFIED!")
+                    print("Status: VERIFIED AGAINST FINANCIAL TESTS")
+                    return report
+
+                print("Sandbox verification did not pass.")
+
+                feedback = (
+                    "The previous repair failed independent "
+                    "sandbox verification. Fix the calculation "
+                    "logic without changing financial records. "
+                    "Here are the test results:\n"
+                    + report["repair_logs"][-2000:]
+                )
+
+                continue
 
             print("Structural validation: FAILED")
             print("Reason:", reason)
@@ -38,6 +58,7 @@ def run_repair_agent():
                 "Make sure payments are added and refunds are subtracted. "
                 "Return exactly one valid JSON object."
             )
+
 
             if attempt < MAX_ATTEMPTS:
                 print("Requesting another patch from Nemotron...")
