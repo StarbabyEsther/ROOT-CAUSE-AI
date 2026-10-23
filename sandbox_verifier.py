@@ -81,6 +81,8 @@ def verify_ai_repair():
 
     print("\nTesting ORIGINAL code in Nebius Sandbox...")
     baseline = run_sandbox_tests("transactions.py")
+    print("\nORIGINAL SANDBOX ERROR DETAILS:")
+    print(baseline["logs"])
 
     print("Baseline:", baseline["status"])
     print("Failures:", baseline["failed"])
@@ -89,6 +91,8 @@ def verify_ai_repair():
     repaired = run_sandbox_tests(
         "verification_bundle/transactions.py"
     )
+    print("\nREPAIRED SANDBOX ERROR DETAILS:")
+    print(repaired["logs"])
 
     print("Repair:", repaired["status"])
     print("Tests passed:", repaired["passed"])
