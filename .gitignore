@@ -220,26 +220,22 @@ bug_report.txt
 
 # Streamlit
 .streamlit/secrets.toml
-<<<<<<< HEAD
-# financial_report
-financial_report.json
-#proposed patch
-proposed_patch.json
-=======
 
 # RootCause AI generated reports
 ai_investigation.txt
 financial_report.json
 verification_report.json
->>>>>>> main
-
-
-financial_report.json
 proposed_patch.json
-verification_report.json
-verification_bundle/
 sandbox_verification_report.json
 
-refund_verification_bundle/
+# Refund repair reports
 refund_verification_report.json
 refund_proposed_patch.json
+
+# Generated verification folders
+verification_bundle/
+refund_verification_bundle/
+
+# Local backups and archives
+*.bak
+RootCause-AI-source.zip
