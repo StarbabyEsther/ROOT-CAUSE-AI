@@ -12,6 +12,15 @@ load_dotenv()
 api_key = os.getenv("NEBIUS_API_KEY")
 model_id = os.getenv("NEBIUS_MODEL")
 
+if not api_key or not model_id:
+    try:
+        import streamlit as st
+
+        api_key = api_key or st.secrets.get("NEBIUS_API_KEY")
+        model_id = model_id or st.secrets.get("NEBIUS_MODEL")
+    except (FileNotFoundError, KeyError):
+        pass
+
 if not api_key:
     raise RuntimeError("NEBIUS_API_KEY is missing from .env")
 
