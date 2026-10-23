@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 import streamlit as st
+from workflow import run_workflow
 
 from financial_investigator import investigate_transactions
 from transactions import (
@@ -83,61 +84,29 @@ st.write(
 )
 
 
+
 if st.button("🚀 Analyze & Repair", type="primary"):
 
-    report_path = ROOT / scenario["report"]
-    patch_path = ROOT / scenario["patch"]
-
-    # Avoid displaying reports from an earlier run.
-    report_path.unlink(missing_ok=True)
-    patch_path.unlink(missing_ok=True)
+    scenario_id = (
+        "duplicate_transaction"
+        if scenario_name == "Duplicate transaction processing"
+        else "incorrect_refund"
+    )
 
     try:
         with st.spinner(
-            "Nemotron is investigating and Nebius is "
-            "verifying the proposed repair..."
+            "Nemotron is investigating the issue and "
+            "Nebius is verifying the repair..."
         ):
-
-            result = subprocess.run(
-                [sys.executable, str(ROOT / scenario["script"])],
-                cwd=ROOT,
-                capture_output=True,
-                text=True,
-                timeout=600,
-                check=False,
-            )
-
-        logs = result.stdout + "\n" + result.stderr
-
-        verification = (
-            json.loads(report_path.read_text(encoding="utf-8"))
-            if report_path.exists()
-            else {}
-        )
-
-        patch = (
-            json.loads(patch_path.read_text(encoding="utf-8"))
-            if patch_path.exists()
-            else {}
-        )
-
-        financial = investigate_transactions(
-            scenario["records"],
-            calculator=scenario["calculator"],
-        )
-
-        verified = (
-            result.returncode == 0
-            and verification.get("verdict") == "verified_fixed"
-        )
+            result = run_workflow(scenario_id)
 
         st.session_state["rc_result"] = {
             "scenario": scenario_name,
-            "verified": verified,
-            "financial": financial,
-            "verification": verification,
-            "patch": patch,
-            "logs": logs,
+            "verified": result["verified"],
+            "financial": result["financial"],
+            "verification": result["verification"],
+            "patch": result["patch"],
+            "logs": result["logs"],
         }
 
     except Exception as error:
@@ -149,6 +118,8 @@ if st.button("🚀 Analyze & Repair", type="primary"):
             "patch": {},
             "logs": str(error),
         }
+
+
 
 
 results = st.session_state.get("rc_result")
