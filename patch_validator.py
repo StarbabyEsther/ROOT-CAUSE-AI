@@ -4,8 +4,8 @@ import json
 from pathlib import Path
 
 
-def validate_patch():
-    original_code = Path("transactions.py").read_text(
+def validate_patch(source_file="transactions.py"):
+    original_code = Path(source_file).read_text(
         encoding="utf-8"
     )
 
@@ -15,7 +15,7 @@ def validate_patch():
         )
     )
 
-    if patch.get("target_file") != "transactions.py":
+    if patch.get("target_file") != source_file:
         return False, "Unauthorized target file."
 
     proposed_code = patch.get("proposed_code")

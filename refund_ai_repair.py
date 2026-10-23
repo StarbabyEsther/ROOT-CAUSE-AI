@@ -172,6 +172,11 @@ def repair_refund():
                             "proposed_code must contain ONLY the "
                             "corrected calculate_total(transactions) "
                             "function, not the complete file. "
+                            "Return proposed_code as a JSON string containing "
+                            "valid Python source code. "
+                            "Use standard JSON escaping for newlines. "
+                            "Do not include Markdown code fences or literal "
+                            "backslash-n sequences in the decoded Python code. "
                             "Fix incorrect refund calculations. "
                             "Payments must be added and refunds "
                             "must be subtracted. "
@@ -209,7 +214,14 @@ def repair_refund():
             if not isinstance(proposed, str) or not proposed.strip():
                 raise ValueError("Missing proposed Python code.")
 
-            repaired = prepare_repair(original, proposed)
+            try:
+                repaired = prepare_repair(original, proposed)
+
+            except SyntaxError as error:
+                raise ValueError(
+                    f"Nemotron generated invalid Python code: {error}"
+                    f"Problematic line: {error.text!r}"
+                ) from error
             
             (ROOT / "refund_proposed_patch.json").write_text(
                 json.dumps(patch, indent=2),

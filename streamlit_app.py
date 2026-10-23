@@ -77,11 +77,11 @@ st.info(
     "This demonstration uses synthetic financial data. "
     "Original source code is preserved."
 )
-
 st.write(
     f"**Verification suite:** "
     f"{scenario['total_tests']} financial regression tests"
 )
+
 
 if st.button("🚀 Analyze & Repair", type="primary"):
 
@@ -198,9 +198,14 @@ if results and results["scenario"] == scenario_name:
             financial["issue_type"],
         )
 
-        st.write(
-            "**Affected Transactions:**",
-            financial.get("affected_transactions", []),
+        st.write("**Affected Transactions:**")
+
+        st.code(
+            json.dumps(
+                financial.get("affected_transactions", []),
+                indent=2
+            ),
+            language="json"
         )
 
     st.divider()

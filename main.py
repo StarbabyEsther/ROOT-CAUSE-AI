@@ -1,4 +1,4 @@
-
+from scenario_registry import get_scenario
 import json
 from pathlib import Path
 
@@ -56,7 +56,7 @@ def validate_ai_response(response):
     return data
 
 
-def main():
+def main(scenario_id="duplicate_transaction"):
     print("=" * 50)
     print("ROOTCAUSE AI - AUTONOMOUS FINANCIAL DEBUGGING")
     print("=" * 50)
@@ -64,7 +64,12 @@ def main():
     # STEP 1: Investigate financial transactions
     print("\n[1/4] FINANCIAL INVESTIGATION")
 
-    report = investigate_transactions(transactions)
+    scenario = get_scenario(scenario_id)
+
+    report = investigate_transactions(
+    scenario["records"],
+    calculator=scenario["calculator"]
+)
 
     print("Issue detected:", report["issue_detected"])
     print("Issue type:", report["issue_type"])
@@ -85,8 +90,12 @@ def main():
     # STEP 2: NVIDIA Nemotron diagnosis
     print("\n[2/4] NVIDIA NEMOTRON INVESTIGATION")
 
+    
     try:
-        ai_result = investigate_bug()
+        ai_result = investigate_bug(
+            source_file=scenario["source_file"]
+        )
+
         ai_report = validate_ai_response(ai_result)
 
     except Exception as error:
