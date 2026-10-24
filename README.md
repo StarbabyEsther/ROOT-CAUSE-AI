@@ -64,30 +64,122 @@ flowchart TD
 
 ## Running Locally
 
-Install the project dependencies:
+Follow these instructions to run RootCause AI on your computer.
+
+### 1. Prerequisites
+
+Before starting, make sure you have:
+
+- Python 3.12 or later
+- Git
+- A Nebius account
+- A Nebius API key with access to NVIDIA Nemotron
+- A Nebius Project ID with Sandbox access
+
+### 2. Clone the Repository
+
+Open your terminal and run:
+
+```bash
+git clone https://github.com/StarbabyEsther/ROOT-CAUSE-AI.git
+cd ROOT-CAUSE-AI
+```
+
+### 3. Create a Virtual Environment
+
+```bash
+python -m venv .venv
+```
+
+Activate the environment.
+
+For Windows PowerShell:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+For macOS/Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+### 4. Install Dependencies
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-Configure the required Nebius credentials securely. Do not commit API keys or `.env` files.
+This installs Streamlit, the OpenAI-compatible API client,
+python-dotenv, and Contree CLI.
 
-Start the Streamlit dashboard:
+### 5. Configure Nebius Credentials
+
+RootCause AI uses NVIDIA Nemotron through Nebius Token Factory
+and Nebius Sandboxes for independent code verification.
+
+Create a file named `.env` in the project's root directory.
+
+Add the following configuration:
+
+```env
+NEBIUS_API_KEY=your_api_key_here
+NEBIUS_MODEL=your_nemotron_model_here
+CONTREE_PROJECT_ID=your_project_id_here
+```
+
+Replace the placeholders with your own Nebius credentials.
+
+**Security:** Never upload your `.env` file, API keys, or
+authentication tokens to GitHub.
+
+### 6. Authenticate Nebius Sandbox
+
+RootCause AI uses Nebius Sandboxes through Contree CLI
+to execute regression tests in isolated environments.
+
+Run:
+
+```bash
+contree auth
+```
+
+Select IAM authentication and provide your Nebius Project ID
+and API token when prompted.
+
+Once authentication succeeds, Contree saves an authentication
+profile that allows the application to execute sandbox tests.
+
+### 7. Start RootCause AI
+
+Run:
 
 ```bash
 python -m streamlit run streamlit_app.py
 ```
 
-The complete repair workflow requires working Nebius Token Factory access and Nebius Sandbox authentication.
+Open the local URL displayed in your terminal.
 
-## Automated Testing
+### 8. Run an Investigation
 
-Run the reusable workflow tests:
+1. Open the Streamlit dashboard.
+2. Select a financial debugging scenario.
+3. Click **Analyze & Repair**.
+4. Review the financial discrepancy and AI investigation.
+5. Examine the proposed code repair.
+6. Review the Nebius Sandbox verification results.
+
+### 9. Run Automated Tests
+
+To run the reusable workflow tests:
 
 ```bash
 python -m unittest test_workflow.py -v
 ```
 
+Financial regression tests are also executed inside Nebius
+Sandboxes during the repair verification process.
 The workflow tests cover successful verification, failed repairs, blocked execution, corrupted reports, and unsupported scenarios.
 
 ## Verification and Limitations
@@ -100,6 +192,12 @@ The workflow tests cover successful verification, failed repairs, blocked execut
 - This is a hackathon prototype, not production-ready financial software.
 
 ## Team
+Developed collaboratively by Esther and Juliana for the Nebius x NVIDIA AI Hackathon.
+
+**Track:** Coding & Agentic Engineering
+
+## License
+This project is licensed under the MIT License. See the `LICENSE` file for details.
 
 Developed collaboratively for the Nebius x NVIDIA AI Hackathon.
 
