@@ -7,6 +7,14 @@ RootCause AI is an AI-assisted system that investigates financial software error
 
 Built for the Nebius x NVIDIA AI Hackathon.
 
+## Live Demo
+
+Try RootCause AI:
+https://rootcause-ai-demo.streamlit.app/
+
+Select a financial debugging scenario and click **Analyze & Repair** to see the AI investigation, generated repair, and independent sandbox verification.
+
+
 ## The Problem
 
 Financial calculation bugs can lead to duplicate payments, incorrect refunds, and inaccurate transaction totals.
