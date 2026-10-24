@@ -225,3 +225,17 @@ bug_report.txt
 ai_investigation.txt
 financial_report.json
 verification_report.json
+proposed_patch.json
+sandbox_verification_report.json
+
+# Refund repair reports
+refund_verification_report.json
+refund_proposed_patch.json
+
+# Generated verification folders
+verification_bundle/
+refund_verification_bundle/
+
+# Local backups and archives
+*.bak
+RootCause-AI-source.zip

@@ -12,6 +12,15 @@ load_dotenv()
 api_key = os.getenv("NEBIUS_API_KEY")
 model_id = os.getenv("NEBIUS_MODEL")
 
+if not api_key or not model_id:
+    try:
+        import streamlit as st
+
+        api_key = api_key or st.secrets.get("NEBIUS_API_KEY")
+        model_id = model_id or st.secrets.get("NEBIUS_MODEL")
+    except (FileNotFoundError, KeyError):
+        pass
+
 if not api_key:
     raise RuntimeError("NEBIUS_API_KEY is missing from .env")
 
@@ -26,7 +35,7 @@ client = OpenAI(
 )
 
 
-def investigate_bug():
+def investigate_bug(source_file="transactions.py"):
     # Read the financial investigation results
     report = json.loads(
         Path("financial_report.json").read_text(
@@ -35,7 +44,7 @@ def investigate_bug():
     )
 
     # Read the Python code containing the bug
-    source_code = Path("transactions.py").read_text(
+    source_code = Path(source_file).read_text(
         encoding="utf-8"
     )
 
