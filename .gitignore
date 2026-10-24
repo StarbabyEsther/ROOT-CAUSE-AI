@@ -239,3 +239,7 @@ refund_verification_bundle/
 # Local backups and archives
 *.bak
 RootCause-AI-source.zip
+
+# Additional environment files
+.env.*
+!.env.example

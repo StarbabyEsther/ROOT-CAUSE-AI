@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 import streamlit as st
+from dotenv import load_dotenv
 from workflow import run_workflow
 
 from financial_investigator import investigate_transactions
@@ -21,10 +22,18 @@ from refund_processor import (
 
 ROOT = Path(__file__).resolve().parent
 # Make Streamlit Cloud secrets available to subprocesses.
-for secret_name in ("NEBIUS_API_KEY", "NEBIUS_MODEL", "CONTREE_PROJECT_ID"):
-    if secret_name in st.secrets:
-        os.environ[secret_name] = str(st.secrets[secret_name])
+# Load local environment variables from .env when available.
+load_dotenv(ROOT / ".env")
+# Read Streamlit Cloud secrets if available.
+try:
+    cloud_secrets = dict(st.secrets)
+except FileNotFoundError:
+    cloud_secrets = {}
 
+# Make cloud credentials available to subprocesses.
+for secret_name in ("NEBIUS_API_KEY", "NEBIUS_MODEL", "CONTREE_PROJECT_ID"):
+    if secret_name in cloud_secrets:
+        os.environ[secret_name] = str(cloud_secrets[secret_name])
 SCENARIOS = {
     "Duplicate transaction processing": {
         "script": "main.py",
