@@ -1,5 +1,5 @@
-
 import difflib
+import os
 import json
 import subprocess
 import sys
@@ -20,6 +20,10 @@ from refund_processor import (
 
 
 ROOT = Path(__file__).resolve().parent
+# Make Streamlit Cloud secrets available to subprocesses.
+for secret_name in ("NEBIUS_API_KEY", "NEBIUS_MODEL", "CONTREE_PROJECT_ID"):
+    if secret_name in st.secrets:
+        os.environ[secret_name] = str(st.secrets[secret_name])
 
 SCENARIOS = {
     "Duplicate transaction processing": {

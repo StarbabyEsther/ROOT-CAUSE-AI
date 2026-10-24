@@ -1,5 +1,5 @@
-
 import json
+import os
 import re
 import subprocess
 import time
@@ -9,6 +9,40 @@ from prepare_sandbox_tests import prepare_sandbox_tests
 
 ROOT = Path(__file__).resolve().parent
 EXPECTED_TESTS = 6
+def authenticate_contree():
+    # Read credentials from environment variables.
+    project_id = os.getenv("CONTREE_PROJECT_ID")
+    api_key = os.getenv("NEBIUS_API_KEY")
+
+    # Stop if either credential is missing.
+    if not project_id or not api_key:
+        raise RuntimeError(
+            "Missing CONTREE_PROJECT_ID or NEBIUS_API_KEY."
+        )
+
+    # Authenticate Contree using Nebius IAM.
+    result = subprocess.run(
+        [
+            "contree",
+            "auth",
+            "--type", "iam",
+            "--project", project_id,
+            "--token", api_key,
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+
+    if result.returncode != 0:
+        raise RuntimeError(
+            "Contree authentication failed. "
+            "Check the Nebius project ID and credentials."
+        )
+
+    print("Nebius Sandbox authentication successful.")
 
 
 def run_sandbox_tests(source_file):
@@ -74,6 +108,8 @@ def verify_ai_repair():
 
     print("ROOTCAUSE AI - AUTOMATED SANDBOX VERIFICATION")
     print("=" * 50)
+    print("\nAuthenticating Nebius Sandbox...")
+    authenticate_contree()
 
     # Builds the repaired copy and test files.
     # Does not execute AI-generated code locally.
