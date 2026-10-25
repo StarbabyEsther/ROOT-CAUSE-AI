@@ -19,6 +19,10 @@ from refund_processor import (
     calculate_total as refund_calculator,
 )
 
+from precision_processor import (
+    transactions as precision_records,
+    calculate_total as precision_calculator,
+)
 
 ROOT = Path(__file__).resolve().parent
 # Make Streamlit Cloud secrets available to subprocesses.
@@ -54,6 +58,16 @@ SCENARIOS = {
         "records": refund_records,
         "calculator": refund_calculator,
         "total_tests": 7,
+    },
+        "Monetary precision error": {
+        "script": "precision_ai_repair.py",
+        "report": "precision_verification_report.json",
+        "patch": "precision_proposed_patch.json",
+        "original": "precision_processor.py",
+        "repaired": "precision_verification_bundle/precision_processor.py",
+        "records": precision_records,
+        "calculator": precision_calculator,
+        "total_tests": 5,
     },
 }
 
@@ -100,11 +114,13 @@ st.write(
 
 if st.button("🚀 Analyze & Repair", type="primary"):
 
-    scenario_id = (
-        "duplicate_transaction"
-        if scenario_name == "Duplicate transaction processing"
-        else "incorrect_refund"
-    )
+    scenario_ids = {
+        "Duplicate transaction processing": "duplicate_transaction",
+        "Incorrect refund calculation": "incorrect_refund",
+        "Monetary precision error": "monetary_precision",
+    }
+
+    scenario_id = scenario_ids[scenario_name]
 
     try:
         with st.spinner(

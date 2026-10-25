@@ -20,6 +20,11 @@ WORKFLOWS = {
         "report": "refund_verification_report.json",
         "patch": "refund_proposed_patch.json",
     },
+    "monetary_precision": {
+    "script": "precision_ai_repair.py",
+    "report": "precision_verification_report.json",
+    "patch": "precision_proposed_patch.json",
+    },
 }
 
 
