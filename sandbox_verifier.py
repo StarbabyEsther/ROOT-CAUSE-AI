@@ -9,26 +9,20 @@ from prepare_sandbox_tests import prepare_sandbox_tests
 
 ROOT = Path(__file__).resolve().parent
 EXPECTED_TESTS = 6
+
 def authenticate_contree():
-    # Read credentials from environment variables.
-    project_id = os.getenv("CONTREE_PROJECT_ID")
-    api_key = os.getenv("NEBIUS_API_KEY")
+    """
+    Use existing ConTree authentication locally.
+    Configure authentication only when no profile exists.
+    """
+    import os
+    import subprocess
 
-    # Stop if either credential is missing.
-    if not project_id or not api_key:
-        raise RuntimeError(
-            "Missing CONTREE_PROJECT_ID or NEBIUS_API_KEY."
-        )
+    print("Checking Nebius Sandbox authentication...")
 
-    # Authenticate Contree using Nebius IAM.
-    result = subprocess.run(
-        [
-            "contree",
-            "auth",
-            "--type", "iam",
-            "--project", project_id,
-            "--token", api_key,
-        ],
+    # Check whether an existing profile works.
+    check = subprocess.run(
+        ["contree", "images", "--prefix", "python"],
         cwd=ROOT,
         capture_output=True,
         text=True,
@@ -36,13 +30,43 @@ def authenticate_contree():
         check=False,
     )
 
-    if result.returncode != 0:
+    if check.returncode == 0:
+        print("Existing ConTree authentication is working.")
+        return
+
+    # No working profile: try to register credentials.
+    project_id = os.getenv("CONTREE_PROJECT_ID")
+    api_key = os.getenv("NEBIUS_API_KEY")
+
+    if not project_id or not api_key:
         raise RuntimeError(
-            "Contree authentication failed. "
-            "Check the Nebius project ID and credentials."
+            "ConTree authentication unavailable. "
+            "Check the saved profile or environment credentials."
+        )
+
+    # ConTree reads these environment variables during auth.
+    auth_env = os.environ.copy()
+    auth_env["CONTREE_PROJECT"] = project_id
+    auth_env["CONTREE_TOKEN"] = api_key
+
+    auth = subprocess.run(
+        ["contree", "auth", "--type", "iam"],
+        cwd=ROOT,
+        env=auth_env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+
+    if auth.returncode != 0:
+        raise RuntimeError(
+            "Nebius IAM authentication failed. "
+            "Check the project ID, API key, and sandbox access."
         )
 
     print("Nebius Sandbox authentication successful.")
+
 
 
 def run_sandbox_tests(source_file):
