@@ -1,0 +1,276 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   RootCause AI — design tokens
+   Deep navy ground · electric blue primary · cyan instrumentation accent
+   ========================================================================== */
+
+@theme {
+  --color-navy-1000: #03070f;
+  --color-navy-950: #050b16;
+  --color-navy-900: #08111f;
+  --color-navy-850: #0a1526;
+  --color-navy-800: #0c1a2e;
+  --color-navy-700: #12263f;
+  --color-navy-600: #1b3352;
+  --color-navy-500: #274060;
+
+  --color-blue-600: #1c52e0;
+  --color-blue-500: #2e6bff;
+  --color-blue-400: #4d8bff;
+  --color-blue-300: #7aa8ff;
+
+  --color-cyan-500: #12b5d4;
+  --color-cyan-400: #22d3ee;
+  --color-cyan-300: #67e8f9;
+
+  --color-mint-500: #1fc9ae;
+  --color-mint-400: #34e0c4;
+
+  --color-amber-400: #f5b547;
+  --color-rose-400: #fb7185;
+
+  --color-ink: #e8f0fb;
+  --color-ink-muted: #93a9c6;
+  --color-ink-faint: #6b82a0;
+
+  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+
+  --radius-card: 1.25rem;
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ============================ base ====================================== */
+
+@layer base {
+  * {
+    border-color: color-mix(in oklab, white 8%, transparent);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-navy-950);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.032em;
+    color: #f4f8ff;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-blue-500) 45%, transparent);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-cyan-400);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-navy-950);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1b3352;
+    border-radius: 99px;
+    border: 3px solid var(--color-navy-950);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #274060;
+  }
+}
+
+/* ============================ utilities ================================= */
+
+@utility card {
+  position: relative;
+  border-radius: var(--radius-card);
+  border: 1px solid color-mix(in oklab, white 8%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, white 3.5%, transparent),
+      color-mix(in oklab, white 0.6%, transparent)
+    ),
+    var(--color-navy-900);
+  box-shadow:
+    0 1px 0 0 color-mix(in oklab, white 6%, transparent) inset,
+    0 24px 60px -30px rgba(2, 8, 20, 0.9);
+}
+
+@utility card-hover {
+  transition:
+    border-color 260ms var(--ease-out-expo),
+    transform 260ms var(--ease-out-expo),
+    box-shadow 260ms var(--ease-out-expo);
+  &:hover {
+    border-color: color-mix(in oklab, var(--color-blue-400) 40%, transparent);
+    transform: translateY(-2px);
+    box-shadow:
+      0 1px 0 0 color-mix(in oklab, white 8%, transparent) inset,
+      0 30px 70px -34px rgba(46, 107, 255, 0.5);
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-cyan-300);
+}
+
+@utility hairline-t {
+  border-top: 1px solid color-mix(in oklab, white 7%, transparent);
+}
+
+@utility text-gradient {
+  background: linear-gradient(100deg, #ffffff 8%, #a9c6ff 42%, var(--color-cyan-300) 96%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility text-gradient-cyan {
+  background: linear-gradient(96deg, var(--color-cyan-300), var(--color-blue-400));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility ring-focus {
+  &:focus-visible {
+    outline: 2px solid var(--color-cyan-400);
+    outline-offset: 3px;
+  }
+}
+
+/* Dotted engineering grid, used behind hero + section dividers */
+@utility grid-field {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, white 4%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, white 4%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+@utility scan-lines {
+  background-image: repeating-linear-gradient(
+    180deg,
+    color-mix(in oklab, white 3%, transparent) 0px,
+    color-mix(in oklab, white 3%, transparent) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+/* ======================= ambient light + motion ========================= */
+
+@keyframes rc-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, -3%, 0) scale(1.06);
+  }
+}
+
+@keyframes rc-pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-cyan-400) 45%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 9px color-mix(in oklab, var(--color-cyan-400) 0%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-cyan-400) 0%, transparent);
+  }
+}
+
+@keyframes rc-sheen {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+@keyframes rc-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@utility animate-drift {
+  animation: rc-drift 22s ease-in-out infinite;
+}
+
+@utility animate-pulse-ring {
+  animation: rc-pulse-ring 2.4s ease-out infinite;
+}
+
+@utility animate-marquee {
+  animation: rc-marquee 42s linear infinite;
+}
+
+@utility sheen {
+  position: relative;
+  overflow: hidden;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      transparent 30%,
+      color-mix(in oklab, white 22%, transparent) 50%,
+      transparent 70%
+    );
+    animation: rc-sheen 3.2s var(--ease-out-expo) infinite;
+  }
+}
+
+/* =========================== a11y ====================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

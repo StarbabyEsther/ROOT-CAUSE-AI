@@ -1,0 +1,194 @@
+{
+  "duplicate_transaction": {
+    "sourceFile": "transactions.py",
+    "testFile": "test_financial_regression.py",
+    "baseline": {
+      "ran": 6,
+      "failed": 3,
+      "ok": false
+    },
+    "reference": {
+      "ran": 6,
+      "failed": 0,
+      "ok": true
+    },
+    "tests": [
+      {
+        "name": "test_duplicate_payment",
+        "cls": "test_financial_regression.FinancialRegressionTests.test_duplicate_payment",
+        "baseline": "FAIL",
+        "reference": "pass"
+      },
+      {
+        "name": "test_duplicate_refund",
+        "cls": "test_financial_regression.FinancialRegressionTests.test_duplicate_refund",
+        "baseline": "FAIL",
+        "reference": "pass"
+      },
+      {
+        "name": "test_empty_transactions",
+        "cls": "test_financial_regression.FinancialRegressionTests.test_empty_transactions",
+        "baseline": "pass",
+        "reference": "pass"
+      },
+      {
+        "name": "test_input_not_modified",
+        "cls": "test_financial_regression.FinancialRegressionTests.test_input_not_modified",
+        "baseline": "pass",
+        "reference": "pass"
+      },
+      {
+        "name": "test_original_total",
+        "cls": "test_financial_regression.FinancialRegressionTests.test_original_total",
+        "baseline": "FAIL",
+        "reference": "pass"
+      },
+      {
+        "name": "test_original_transactions_preserved",
+        "cls": "test_financial_regression.FinancialRegressionTests.test_original_transactions_preserved",
+        "baseline": "pass",
+        "reference": "pass"
+      }
+    ],
+    "originalFunction": "def calculate_total(transactions):\n    total = 0\n\n    for transaction in transactions:\n        if transaction[\"type\"] == \"Payment\":\n            total = total + transaction[\"amount\"]\n\n        elif transaction[\"type\"] == \"Refund\":\n            total = total - transaction[\"amount\"]\n\n    return total",
+    "referenceFunction": "def calculate_total(transactions):\n    total = 0\n    seen_ids = set()\n\n    for transaction in transactions:\n        if transaction[\"id\"] in seen_ids:\n            continue\n        seen_ids.add(transaction[\"id\"])\n\n        if transaction[\"type\"] == \"Payment\":\n            total = total + transaction[\"amount\"]\n        elif transaction[\"type\"] == \"Refund\":\n            total = total - transaction[\"amount\"]\n\n    return total",
+    "baselineOutput": "File \"test_financial_regression.py\", line 26, in test_duplicate_payment\n    self.assertEqual(calculate_total(data), 70)\nAssertionError: 170 != 70\n\n======================================================================\nFAIL: test_duplicate_refund (test_financial_regression.FinancialRegressionTests.test_duplicate_refund)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"test_financial_regression.py\", line 34, in test_duplicate_refund\n    self.assertEqual(calculate_total(data), 60)\nAssertionError: 20 != 60\n\n======================================================================\nFAIL: test_original_total (test_financial_regression.FinancialRegressionTests.test_original_total)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"test_financial_regression.py\", line 18, in test_original_total\n    self.assertEqual(calculate_total(transactions), 400)\nAssertionError: 600.0 != 400\n\n----------------------------------------------------------------------\nRan 6 tests in 0.001s\n\nFAILED (failures=3)",
+    "referenceOutput": "test_duplicate_payment (test_financial_regression.FinancialRegressionTests.test_duplicate_payment) ... ok\ntest_duplicate_refund (test_financial_regression.FinancialRegressionTests.test_duplicate_refund) ... ok\ntest_empty_transactions (test_financial_regression.FinancialRegressionTests.test_empty_transactions) ... ok\ntest_input_not_modified (test_financial_regression.FinancialRegressionTests.test_input_not_modified) ... ok\ntest_original_total (test_financial_regression.FinancialRegressionTests.test_original_total) ... ok\ntest_original_transactions_preserved (test_financial_regression.FinancialRegressionTests.test_original_transactions_preserved) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.000s\n\nOK",
+    "astValidation": {
+      "passed": true,
+      "reason": "Structural validation passed; NOT VERIFIED.",
+      "negativeControl": {
+        "passed": false,
+        "reason": "Patch must contain only calculate_total()."
+      }
+    }
+  },
+  "incorrect_refund": {
+    "sourceFile": "refund_processor.py",
+    "testFile": "test_refund_processor.py",
+    "baseline": {
+      "ran": 7,
+      "failed": 3,
+      "ok": false
+    },
+    "reference": {
+      "ran": 7,
+      "failed": 0,
+      "ok": true
+    },
+    "tests": [
+      {
+        "name": "test_empty_transactions",
+        "cls": "test_refund_processor.RefundRegressionTests.test_empty_transactions",
+        "baseline": "pass",
+        "reference": "pass"
+      },
+      {
+        "name": "test_input_not_modified",
+        "cls": "test_refund_processor.RefundRegressionTests.test_input_not_modified",
+        "baseline": "pass",
+        "reference": "pass"
+      },
+      {
+        "name": "test_multiple_refunds",
+        "cls": "test_refund_processor.RefundRegressionTests.test_multiple_refunds",
+        "baseline": "FAIL",
+        "reference": "pass"
+      },
+      {
+        "name": "test_original_records_preserved",
+        "cls": "test_refund_processor.RefundRegressionTests.test_original_records_preserved",
+        "baseline": "pass",
+        "reference": "pass"
+      },
+      {
+        "name": "test_original_total",
+        "cls": "test_refund_processor.RefundRegressionTests.test_original_total",
+        "baseline": "FAIL",
+        "reference": "pass"
+      },
+      {
+        "name": "test_payments_only",
+        "cls": "test_refund_processor.RefundRegressionTests.test_payments_only",
+        "baseline": "pass",
+        "reference": "pass"
+      },
+      {
+        "name": "test_refund_only",
+        "cls": "test_refund_processor.RefundRegressionTests.test_refund_only",
+        "baseline": "FAIL",
+        "reference": "pass"
+      }
+    ],
+    "originalFunction": "def calculate_total(transactions):\n    total = 0\n\n    for transaction in transactions:\n        if transaction[\"type\"] == \"Payment\":\n            total += transaction[\"amount\"]\n\n        elif transaction[\"type\"] == \"Refund\":\n            # INTENTIONAL BUG: Refunds should be subtracted.\n            total += transaction[\"amount\"]\n\n    return total",
+    "referenceFunction": "def calculate_total(transactions):\n    total = 0\n\n    for transaction in transactions:\n        if transaction[\"type\"] == \"Payment\":\n            total += transaction[\"amount\"]\n        elif transaction[\"type\"] == \"Refund\":\n            total -= transaction[\"amount\"]\n\n    return total",
+    "baselineOutput": "File \"test_refund_processor.py\", line 25, in test_multiple_refunds\n    self.assertEqual(calculate_total(data), 70)\nAssertionError: 130 != 70\n\n======================================================================\nFAIL: test_original_total (test_refund_processor.RefundRegressionTests.test_original_total)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"test_refund_processor.py\", line 11, in test_original_total\n    self.assertEqual(calculate_total(transactions), 200)\nAssertionError: 300.0 != 200\n\n======================================================================\nFAIL: test_refund_only (test_refund_processor.RefundRegressionTests.test_refund_only)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"test_refund_processor.py\", line 17, in test_refund_only\n    self.assertEqual(calculate_total(data), -25)\nAssertionError: 25 != -25\n\n----------------------------------------------------------------------\nRan 7 tests in 0.001s\n\nFAILED (failures=3)",
+    "referenceOutput": "test_empty_transactions (test_refund_processor.RefundRegressionTests.test_empty_transactions) ... ok\ntest_input_not_modified (test_refund_processor.RefundRegressionTests.test_input_not_modified) ... ok\ntest_multiple_refunds (test_refund_processor.RefundRegressionTests.test_multiple_refunds) ... ok\ntest_original_records_preserved (test_refund_processor.RefundRegressionTests.test_original_records_preserved) ... ok\ntest_original_total (test_refund_processor.RefundRegressionTests.test_original_total) ... ok\ntest_payments_only (test_refund_processor.RefundRegressionTests.test_payments_only) ... ok\ntest_refund_only (test_refund_processor.RefundRegressionTests.test_refund_only) ... ok\n\n----------------------------------------------------------------------\nRan 7 tests in 0.001s\n\nOK",
+    "astValidation": {
+      "passed": true,
+      "reason": "Structural validation passed; NOT VERIFIED.",
+      "negativeControl": {
+        "passed": false,
+        "reason": "Patch must contain only calculate_total()."
+      }
+    }
+  },
+  "monetary_precision": {
+    "sourceFile": "precision_processor.py",
+    "testFile": "test_precision_processor.py",
+    "baseline": {
+      "ran": 5,
+      "failed": 4,
+      "ok": false
+    },
+    "reference": {
+      "ran": 5,
+      "failed": 0,
+      "ok": true
+    },
+    "tests": [
+      {
+        "name": "test_decimal_accuracy",
+        "cls": "test_precision_processor.PrecisionRegressionTests.test_decimal_accuracy",
+        "baseline": "FAIL",
+        "reference": "pass"
+      },
+      {
+        "name": "test_empty_transactions",
+        "cls": "test_precision_processor.PrecisionRegressionTests.test_empty_transactions",
+        "baseline": "pass",
+        "reference": "pass"
+      },
+      {
+        "name": "test_multiple_payments",
+        "cls": "test_precision_processor.PrecisionRegressionTests.test_multiple_payments",
+        "baseline": "FAIL",
+        "reference": "pass"
+      },
+      {
+        "name": "test_original_total",
+        "cls": "test_precision_processor.PrecisionRegressionTests.test_original_total",
+        "baseline": "FAIL",
+        "reference": "pass"
+      },
+      {
+        "name": "test_refund_precision",
+        "cls": "test_precision_processor.PrecisionRegressionTests.test_refund_precision",
+        "baseline": "FAIL",
+        "reference": "pass"
+      }
+    ],
+    "originalFunction": "def calculate_total(transactions):\n    total = 0.0\n\n    for transaction in transactions:\n        if transaction[\"type\"] == \"Payment\":\n            total += transaction[\"amount\"]\n\n        elif transaction[\"type\"] == \"Refund\":\n            total -= transaction[\"amount\"]\n\n    return total",
+    "referenceFunction": "def calculate_total(transactions):\n    from decimal import Decimal\n\n    total = Decimal(\"0\")\n\n    for transaction in transactions:\n        amount = Decimal(str(transaction[\"amount\"]))\n        if transaction[\"type\"] == \"Payment\":\n            total += amount\n        elif transaction[\"type\"] == \"Refund\":\n            total -= amount\n\n    return total",
+    "baselineOutput": "File \"test_precision_processor.py\", line 33, in test_multiple_payments\n    self.assertEqual(result, Decimal(\"0.60\"))\nAssertionError: Decimal('0.6000000000000001') != Decimal('0.60')\n\n======================================================================\nFAIL: test_original_total (test_precision_processor.PrecisionRegressionTests.test_original_total)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"test_precision_processor.py\", line 12, in test_original_total\n    self.assertEqual(result, Decimal(\"0.20\"))\nAssertionError: Decimal('0.20000000000000004') != Decimal('0.20')\n\n======================================================================\nFAIL: test_refund_precision (test_precision_processor.PrecisionRegressionTests.test_refund_precision)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"test_precision_processor.py\", line 43, in test_refund_precision\n    self.assertEqual(result, Decimal(\"0.20\"))\nAssertionError: Decimal('0.19999999999999998') != Decimal('0.20')\n\n----------------------------------------------------------------------\nRan 5 tests in 0.001s\n\nFAILED (failures=4)",
+    "referenceOutput": "test_decimal_accuracy (test_precision_processor.PrecisionRegressionTests.test_decimal_accuracy) ... ok\ntest_empty_transactions (test_precision_processor.PrecisionRegressionTests.test_empty_transactions) ... ok\ntest_multiple_payments (test_precision_processor.PrecisionRegressionTests.test_multiple_payments) ... ok\ntest_original_total (test_precision_processor.PrecisionRegressionTests.test_original_total) ... ok\ntest_refund_precision (test_precision_processor.PrecisionRegressionTests.test_refund_precision) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.000s\n\nOK",
+    "astValidation": {
+      "passed": true,
+      "reason": "Structural validation passed; NOT VERIFIED.",
+      "negativeControl": {
+        "passed": false,
+        "reason": "Patch must contain only calculate_total()."
+      }
+    }
+  }
+}
