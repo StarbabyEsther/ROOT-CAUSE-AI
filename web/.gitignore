@@ -4,8 +4,11 @@ node_modules/
 
 # Build output
 dist/
-# Self-contained offline build (regenerate with `npm run build:standalone`)
-standalone/
+# Self-contained offline build. The generated review artefact IS committed on
+# purpose so it can be downloaded without a build step; everything else in the
+# folder stays ignored.
+standalone/*
+!standalone/rootcause-ai.html
 dist-ssr/
 .ssr-smoke/
 *.local
