@@ -30,6 +30,7 @@ Requirements: Node 20+ (developed on Node 22).
 | `npm run typecheck` | TypeScript only |
 | `npm run smoke` | Render every route in Node (catches runtime errors) |
 | `npm run smoke:panels` | Assert the investigation panels contain the measured values |
+| `npm run build:standalone` | Build one self-contained offline HTML file |
 
 ---
 
@@ -44,6 +45,54 @@ Requirements: Node 20+ (developed on Node 22).
 | `/about` | Team, roadmap, and an explicit measured-vs-illustrative breakdown |
 
 Scenario ids: `duplicate_transaction`, `incorrect_refund`, `monetary_precision`.
+
+---
+
+## Viewing the site
+
+### 1. Arena preview panel (authorised route)
+
+When the dev server is started from this conversation, Arena exposes it in the
+**preview panel** as *"RootCause AI website"*. That panel attaches the sandbox
+traffic access token for you.
+
+Do **not** open a raw `*.e2b.app` URL by hand — the sandbox is private and will
+answer `403 FORBIDDEN · MISSING TRAFFIC ACCESS TOKEN`, because only the panel
+carries the `e2b-traffic-access-token` header. That header is authentication
+plumbing and must never be copied around, hard-coded, or disabled.
+
+### 2. Offline single-file build (no server, no sandbox)
+
+```bash
+npm run build:standalone          # → standalone/rootcause-ai.html
+```
+
+This emits **one** HTML file with the JS, CSS and self-hosted fonts inlined — no
+network, no credentials, no build step to run. Open it by double-clicking, or by
+dragging it into any browser.
+
+Because `file://` cannot use `pushState`, this build uses **hash routing**:
+
+| Page | URL |
+|---|---|
+| Home | `rootcause-ai.html#/` |
+| Lab | `rootcause-ai.html#/lab` |
+| Investigation | `rootcause-ai.html#/lab/monetary_precision` |
+| Architecture | `rootcause-ai.html#/architecture` |
+| About | `rootcause-ai.html#/about` |
+
+`standalone/` is git-ignored: it is a generated review artefact, rebuildable at
+any time, not source.
+
+### 3. Run it locally
+
+```bash
+git clone https://github.com/StarbabyEsther/ROOT-CAUSE-AI.git
+cd ROOT-CAUSE-AI && git checkout arena/0eaa482c-root-cause-ai
+cd web && npm install && npm run dev     # http://localhost:5173
+```
+
+The Python backend is not required for Phase 1.
 
 ---
 

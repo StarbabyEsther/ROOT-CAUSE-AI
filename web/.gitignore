@@ -4,6 +4,8 @@ node_modules/
 
 # Build output
 dist/
+# Self-contained offline build (regenerate with `npm run build:standalone`)
+standalone/
 dist-ssr/
 .ssr-smoke/
 *.local

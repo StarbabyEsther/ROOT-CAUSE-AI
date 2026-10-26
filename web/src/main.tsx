@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, HashRouter } from "react-router-dom";
 
 import "@fontsource-variable/inter";
 import "@fontsource-variable/jetbrains-mono";
@@ -12,10 +12,17 @@ import "./styles/global.css";
 
 import App from "./App";
 
+/**
+ * BrowserRouter is correct for the served app. The offline single-file build
+ * (`npm run build:standalone`) sets VITE_ROUTER=hash so deep links also work
+ * when the bundle is opened straight from disk — file:// cannot use pushState.
+ */
+const Router = import.meta.env.VITE_ROUTER === "hash" ? HashRouter : BrowserRouter;
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    <Router>
       <App />
-    </BrowserRouter>
+    </Router>
   </StrictMode>,
 );
