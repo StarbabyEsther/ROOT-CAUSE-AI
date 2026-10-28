@@ -27,3 +27,9 @@ dist-ssr/
 
 # TypeScript incremental build info
 *.tsbuildinfo
+
+# The repository's root .gitignore ignores *any* directory named `lib/`
+# (Python packaging template). Our source directory must be tracked, or a
+# fresh clone cannot build. Re-include it explicitly.
+!lib/
+!lib/**
