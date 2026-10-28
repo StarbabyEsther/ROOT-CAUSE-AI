@@ -1,0 +1,3 @@
+# Cloudflare Pages: single-page app fallback.
+# Deep links like /lab/monetary_precision must serve index.html, not 404.
+/*    /index.html   200

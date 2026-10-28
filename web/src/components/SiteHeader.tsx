@@ -4,6 +4,7 @@ import { Menu, X, ArrowUpRight } from "lucide-react";
 import { Logo, Wordmark } from "./Logo";
 import { ButtonLink } from "./Button";
 import { cn } from "../lib/cn";
+import { fetchHealth, PREFERRED_MODE } from "../lib/api";
 
 const NAV = [
   { to: "/", label: "Overview", end: true },
@@ -15,7 +16,15 @@ const NAV = [
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [liveReady, setLiveReady] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    if (PREFERRED_MODE !== "live") return;
+    const controller = new AbortController();
+    void fetchHealth(controller.signal).then((health) => setLiveReady(Boolean(health?.liveEnabled)));
+    return () => controller.abort();
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -68,9 +77,16 @@ export function SiteHeader() {
           </nav>
 
           <div className="hidden items-center gap-2.5 md:flex">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/25 bg-cyan-400/[0.07] px-2.5 py-1 text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-cyan-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
-              Replay demo
+            <span
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.625rem] font-semibold uppercase tracking-[0.14em]",
+                liveReady
+                  ? "border-mint-400/30 bg-mint-400/10 text-mint-400"
+                  : "border-cyan-400/25 bg-cyan-400/[0.07] text-cyan-300",
+              )}
+            >
+              <span className={cn("h-1.5 w-1.5 rounded-full", liveReady ? "bg-mint-400" : "bg-cyan-400")} />
+              {liveReady ? "Live AI" : "Replay demo"}
             </span>
             <ButtonLink to="/lab" size="sm" className="pr-3">
               Open lab

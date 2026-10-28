@@ -5,7 +5,7 @@ import type { ScenarioMeta } from "../data/scenarios";
 import { useInvestigation } from "../lib/useInvestigation";
 import { Badge } from "./Badge";
 import { Button } from "./Button";
-import { DemoBanner } from "./DemoBanner";
+import { DemoBanner, ModePill } from "./DemoBanner";
 import { FinancialPanel } from "./FinancialPanel";
 import { DiagnosisPanel } from "./DiagnosisPanel";
 import { CodeCompare } from "./CodeCompare";
@@ -64,7 +64,7 @@ export function InvestigationWorkspace({
   scenario: ScenarioMeta;
   autoStart?: boolean;
 }) {
-  const { states, result, running, elapsed, start, stop } = useInvestigation(
+  const { states, result, running, elapsed, start, stop, fallbackNotice, mode } = useInvestigation(
     scenario.id as ScenarioId,
     autoStart,
   );
@@ -94,6 +94,7 @@ export function InvestigationWorkspace({
             </p>
           </div>
           <div className="flex items-center gap-2">
+            {mode && <ModePill mode={mode} />}
             {running ? (
               <Button variant="secondary" size="sm" onClick={stop}>
                 <Square className="h-3 w-3" />
@@ -121,7 +122,7 @@ export function InvestigationWorkspace({
           </span>
         </div>
 
-        <DemoBanner compact />
+        <DemoBanner compact mode={mode} fallbackMessage={fallbackNotice?.message} />
       </div>
 
       <StageProgress states={states} elapsed={elapsed} running={running} />

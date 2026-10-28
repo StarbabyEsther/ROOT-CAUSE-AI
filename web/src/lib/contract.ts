@@ -99,11 +99,14 @@ export interface InvestigationResult {
   scenarioId: ScenarioId;
   mode: "replay" | "live";
   financial: FinancialReport;
-  /** Phase 1 has no model output; this is a written explanation, clearly flagged in the UI. */
+  /**
+   * `illustrative: true` means hand-written reference text (recorded runs).
+   * `false` means real NVIDIA Nemotron output (live runs).
+   */
   diagnosis: {
     rootCause: string;
     explanation: string;
-    illustrative: true;
+    illustrative: boolean;
   };
   reference: PatchProposal;
   verification: VerificationReport;

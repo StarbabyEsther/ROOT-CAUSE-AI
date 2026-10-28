@@ -1,0 +1,56 @@
+# RootCause AI — API adapter on Fly.io
+#
+# Do not deploy until preflight passes:  api/.venv/bin/python -m api.preflight --live
+#
+# Secrets are set with `fly secrets set`, never in this file:
+#   NEBIUS_API_KEY, NEBIUS_MODEL, CONTREE_PROJECT_ID, CONTREE_TOKEN
+
+app = "rootcause-ai-api"
+primary_region = "iad"
+
+[build]
+  dockerfile = "api/Dockerfile"
+
+[env]
+  LIVE_RUNS_ENABLED = "false"      # flip to true only after preflight --live passes
+  RC_STATE_DIR = "/data/state"     # mounted volume (below)
+  RC_WORKSPACE_ROOT = "/data/work"
+  RC_BACKEND_DIR = "/app/backend"
+  RC_TRUST_PROXY = "true"
+  RC_PER_IP_HOUR = "2"
+  RC_PER_IP_DAY = "5"
+  RC_GLOBAL_DAY = "30"
+  RC_MAX_CONCURRENT = "1"
+  # Set after the Pages URL exists, e.g. https://rootcause-ai.pages.dev
+  RC_ALLOWED_ORIGINS = "https://rootcause-ai.pages.dev"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = "stop"      # cost control; first request after idle is slower
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 20
+    hard_limit = 40
+
+# Rate limits and the concurrency gate live in SQLite, so they must survive
+# deploys and machine restarts.
+[[mounts]]
+  source = "rcai_state"
+  destination = "/data"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
+
+[checks.health]
+  type = "http"
+  port = 8000
+  path = "/api/health"
+  interval = "30s"
+  timeout = "5s"
+  grace_period = "20s"

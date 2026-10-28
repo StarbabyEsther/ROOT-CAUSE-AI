@@ -32,7 +32,7 @@ export default function Lab() {
         }
         description="Three synthetic financial defects, each with its own protected regression suite. Select a scenario to inspect the ledger, then run the four-stage investigation."
       >
-        <DemoBanner />
+        <DemoBanner mode={null} />
       </PageHero>
 
       <div className="mx-auto max-w-[82rem] px-4 sm:px-6 lg:px-8">
