@@ -235,6 +235,10 @@ refund_proposed_patch.json
 # Generated verification folders
 verification_bundle/
 refund_verification_bundle/
+# Precision scenario artifacts (same treatment as the duplicate/refund ones)
+precision_verification_report.json
+precision_proposed_patch.json
+precision_verification_bundle/
 
 # Local backups and archives
 *.bak
