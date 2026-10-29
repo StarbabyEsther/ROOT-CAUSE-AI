@@ -16,7 +16,7 @@ https://root-cause-ai-1.streamlit.app/
 
 Select a financial debugging scenario and click **Analyze & Repair** to see the AI investigation, generated repair, and independent sandbox verification.
 
-[**Explore the Live Demo**](https://root-cause-ai-1.streamlit.app/) · [**How It Works**](#how-it-works) · [**Run Locally**](#getting-started) · [**Technical Documentation**](TECHNICAL_DOCUMENTATION.md)
+[**Explore the Live Demo**](https://root-cause-ai-demo.streamlit.app/) · [**How It Works**](#how-it-works) · [**Run Locally**](#getting-started) · [**Technical Documentation**](TECHNICAL_DOCUMENTATION.md)
 
 </div>
 
@@ -162,7 +162,7 @@ The AI's explanation does **not** determine the verification verdict. The result
 ## Experience RootCause AI
 ### Live demonstration
 
-**[Launch the RootCause AI demo](https://root-cause-ai-1.streamlit.app/)**
+**[Launch the RootCause AI demo](https://root-cause-ai-demo.streamlit.app/)**
 
 The app lets you select a supported financial failure; initiate **Analyze & Repair**, and inspect:
 
@@ -416,7 +416,7 @@ MIT License — see [LICENSE](LICENSE) for the full terms.
 
 ### AI can propose a repair. RootCause AI asks: **Did it actually work?**
 
-[**Try the Demo**](https://root-cause-ai-1.streamlit.app/) · [**Explore the Code**](https://github.com/StarbabyEsther/ROOT-CAUSE-AI) · [**Read the Technical Docs**](TECHNICAL_DOCUMENTATION.md)
+[**Try the Demo**](https://root-cause-ai-demo.streamlit.app/) · [**Explore the Code**](https://github.com/StarbabyEsther/ROOT-CAUSE-AI) · [**Read the Technical Docs**](TECHNICAL_DOCUMENTATION.md)
 
 </div>
 
