@@ -59,31 +59,30 @@ def authenticate_contree():
         check=False,
     )
 
-if auth.returncode != 0:
-    print("Contree authentication failed.")
-    print("Exit code:", auth.returncode)
+    if auth.returncode != 0:
+        print("Contree authentication failed.")
+        print("Exit code:", auth.returncode)
 
-    error_text = (auth.stderr + "\n" + auth.stdout).lower()
+        error_text = (auth.stderr + "\n" + auth.stdout).lower()
 
-    if "unauthorized" in error_text or "401" in error_text:
-        reason = "Nebius rejected the credentials."
-    elif "forbidden" in error_text or "403" in error_text:
-        reason = "The credentials may lack permission to access this project."
-    elif "project" in error_text:
-        reason = "There may be a problem with the Nebius project configuration."
-    elif "timeout" in error_text:
-        reason = "The authentication request timed out."
-    else:
-        reason = "Authentication failed for an unidentified reason."
+        if "unauthorized" in error_text or "401" in error_text:
+            reason = "Nebius rejected the credentials."
+        elif "forbidden" in error_text or "403" in error_text:
+            reason = "The credentials may lack permission to access this project."
+        elif "project" in error_text:
+            reason = "There may be a problem with the Nebius project configuration."
+        elif "timeout" in error_text:
+            reason = "The authentication request timed out."
+        else:
+            reason = "Authentication failed for an unidentified reason."
 
-    raise RuntimeError(reason)
+        raise RuntimeError(reason)
 
     print("Nebius Sandbox authentication successful.")
 
-
-
 def run_sandbox_tests(source_file):
     authenticate_contree()
+
     command = [
         "contree", "run",
         "--use", "tag:python:3.12-slim",
