@@ -89,23 +89,22 @@ That's deliberate—verification and scope control are part of the product desig
 ## How it works
 ```mermaid
 flowchart TD
-    A[Choose financial scenario] --> B [Load synthetic records and buggy calculator]
-    B --> C [Investigate discrepancy]
-    C --> D [NVIDIA Nemotron root-cause analysis]
-    D --> E [Generate candidate Python repair]
-    E --> F {Patch passes structural validation?}
-    F -- No --> G [Return feedback / retry within limit]
+    A["Choose financial scenario"] --> B["Load synthetic records and buggy calculator"]
+    B --> C["Investigate discrepancy"]
+    C --> D["NVIDIA Nemotron root-cause analysis"]
+    D --> E["Generate candidate Python repair"]
+    E --> F{"Patch passes structural validation?"}
+    F -->|No| G["Return feedback / retry within limit"]
     G --> E
-    F -- Yes --> H [Prepare isolated verification artifacts]
-    H --> I [Run original code tests in Nebius Sandbox]
-    I --> J [Run repaired code tests in Nebius Sandbox]
-    J --> K [Expected tests pass?]
-    K -- Yes --> L [verified_fixed]
-    K -- No --> M [not_fixed / error]
-    L --> N [Dashboard: evidence, diff, logs]
+    F -->|Yes| H["Prepare isolated verification artifacts"]
+    H --> I["Run original code tests in Nebius Sandbox"]
+    I --> J["Run repaired code tests in Nebius Sandbox"]
+    J --> K{"Expected tests pass?"}
+    K -->|Yes| L["verified_fixed"]
+    K -->|No| M["not_fixed / error"]
+    L --> N["Dashboard: evidence, diff, logs"]
     M --> N
 ```
-
 
 ### The six-stage investigation
 
