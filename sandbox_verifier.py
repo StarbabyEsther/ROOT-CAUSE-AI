@@ -59,11 +59,24 @@ def authenticate_contree():
         check=False,
     )
 
-    if auth.returncode != 0:
-        raise RuntimeError(
-            "Nebius IAM authentication failed. "
-            "Check the project ID, API key, and sandbox access."
-        )
+if auth.returncode != 0:
+    print("Contree authentication failed.")
+    print("Exit code:", auth.returncode)
+
+    error_text = (auth.stderr + "\n" + auth.stdout).lower()
+
+    if "unauthorized" in error_text or "401" in error_text:
+        reason = "Nebius rejected the credentials."
+    elif "forbidden" in error_text or "403" in error_text:
+        reason = "The credentials may lack permission to access this project."
+    elif "project" in error_text:
+        reason = "There may be a problem with the Nebius project configuration."
+    elif "timeout" in error_text:
+        reason = "The authentication request timed out."
+    else:
+        reason = "Authentication failed for an unidentified reason."
+
+    raise RuntimeError(reason)
 
     print("Nebius Sandbox authentication successful.")
 
