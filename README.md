@@ -12,7 +12,7 @@ Built for the **Nebius × NVIDIA AI Hackathon** · **Coding & Agentic Engineerin
 ## Live Demo
 
 Try RootCause AI:
-https://root-cause-ai-1.streamlit.app/
+https://root-cause-ai-demo.streamlit.app/
 
 Select a financial debugging scenario and click **Analyze & Repair** to see the AI investigation, generated repair, and independent sandbox verification.
 
