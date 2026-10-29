@@ -50,7 +50,7 @@ def authenticate_contree():
     auth_env["CONTREE_TOKEN"] = api_key
 
     auth = subprocess.run(
-        ["contree", "auth", "--type", "iam"],
+        ["contree", "auth", "--type", "iam", "--force"],
         cwd=ROOT,
         env=auth_env,
         capture_output=True,
@@ -70,6 +70,7 @@ def authenticate_contree():
 
 
 def run_sandbox_tests(source_file):
+    authenticate_contree()
     command = [
         "contree", "run",
         "--use", "tag:python:3.12-slim",

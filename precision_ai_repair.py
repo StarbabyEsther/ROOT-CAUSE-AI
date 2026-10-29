@@ -5,6 +5,7 @@ import re
 import subprocess
 from pathlib import Path
 
+from sandbox_verifier import authenticate_contree
 from patch_generator import client, MODEL_ID
 
 ROOT = Path(__file__).resolve().parent
@@ -16,6 +17,7 @@ MAX_ATTEMPTS = 2
 
 
 def run_tests(source_path):
+    authenticate_contree()
     command = [
         "contree", "run",
         "--use", "tag:python:3.12-slim",
